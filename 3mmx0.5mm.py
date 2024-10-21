@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt 
 
 # Set the channel dimension constants (in m)
-W = 0.003
+W = 0.001
 H = 0.0005
 L = 0.008 
 
@@ -37,7 +37,7 @@ def velocity_flow(x, y, Q, k):
     for n in range(1,k):
         beta_n = (2*n-1)*((np.pi/2.0))
         gamma = w/h
-        sum_1 = (((-1.)**k)/beta_n**2.)*(((np.cosh(beta_n*(x/h)))/(np.cosh(beta_n*gamma)))*np.cos(beta_n*(y/h)))
+        sum_1 = (((-1.)**n)/beta_n**2.)*(((np.cosh(beta_n*(x/h)))/(np.cosh(beta_n*gamma)))*np.cos(beta_n*(y/h)))
         shear.append(sum_1)
         sum_2 = (1. - (y/h)**2 + 4*(np.sum(shear)))
     return constant * sum_2
@@ -45,19 +45,19 @@ def velocity_flow(x, y, Q, k):
 # Setting up the function for max shear stress acting on the top wall
 def max_shear_stress_top_wall(k,Q):
     
-    constant = (Q/transmissability(k))*((h**2)/(2.*mu))
+    constant = (Q/transmissability(k))*H#*((h**2)/(2.*mu))
     shear = []
 
     for n in range(1,k):
         beta_n = (2*n-1)*((np.pi)/2.0)
         gamma = w/h
-        sum_1 = ((-1.)**k/beta_n**2.)*(np.sin(beta_n)/np.cosh(beta_n*gamma))
+        sum_1 = ((-1.)**n/beta_n**2.)*(np.sin(beta_n)/np.cosh(beta_n*gamma))
         shear.append(sum_1)
         sum_2 = (-1./2) - np.sum(shear)
-    return mu * constant * sum_2
+    return constant * sum_2
 
 # Update the x-axis range to 20 ml/day
-Q_ml_day = np.linspace(0, 20, 100)
+Q_ml_day = np.linspace(0, 25, 100)
 Q = Q_ml_day / (86400. * 1.0e6)  # Convert from ml/day to m^3/s
 
 # Calculate max shear stress for each flow ratecle
@@ -94,7 +94,7 @@ plt.legend()
 # Setting x-axis limit to 25 ml/day
 plt.xlim(0, 25)  
 # Setting y-axis limit to 0.05 Pa
-plt.ylim(-0.01, 0.05)
+plt.ylim(0.00, 0.05)
 plt.show() 
 
 '''
